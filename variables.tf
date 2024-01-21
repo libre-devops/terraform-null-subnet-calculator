@@ -4,6 +4,7 @@ variable "base_cidr" {
 }
 
 variable "subnets" {
-  description = "A map of subnet names and desired subnet mask sizes"
-  type        = map(number)
+  description = "List of desired subnet mask sizes or map of subnet names to mask sizes"
+  type        = any
+  default     = []
 }

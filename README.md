@@ -1,15 +1,19 @@
 ```hcl
 locals {
   base_cidr_mask_size = tonumber(split("/", var.base_cidr)[1])
+
+  is_map = type(var.subnets) == "map"
+
+  subnets_map = local.is_map ? var.subnets : { for i, size in var.subnets : format("subnet%s", i + 1) => size }
+
   calculated_subnets = {
-    for subnet_name, desired_mask_size in var.subnets :
-    subnet_name => cidrsubnet(var.base_cidr, desired_mask_size - local.base_cidr_mask_size, index(keys(var.subnets), subnet_name))
+    for subnet_name, desired_mask_size in local.subnets_map :
+    subnet_name => cidrsubnet(var.base_cidr, desired_mask_size - local.base_cidr_mask_size, index(keys(local.subnets_map), subnet_name))
   }
 
   subnet_names  = keys(local.calculated_subnets)
   subnet_ranges = values(local.calculated_subnets)
 }
-
 ```
 ## Requirements
 
@@ -32,7 +36,7 @@ No resources.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_base_cidr"></a> [base\_cidr](#input\_base\_cidr) | The base CIDR block | `string` | n/a | yes |
-| <a name="input_subnets"></a> [subnets](#input\_subnets) | A map of subnet names and desired subnet mask sizes | `map(number)` | n/a | yes |
+| <a name="input_subnets"></a> [subnets](#input\_subnets) | List of desired subnet mask sizes or map of subnet names to mask sizes | `any` | `[]` | no |
 
 ## Outputs
 
