@@ -14,4 +14,3 @@ variable "subnets" {
   type        = map(number)
   default     = {}
 }
-
