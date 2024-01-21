@@ -12,7 +12,8 @@ module "rg" {
 }
 
 module "hub_subnet_calculator" {
-  source    = "cyber-scot/subnet-calculator/null"
+  source = "cyber-scot/subnet-calculator/null"
+
   base_cidr = local.hub_vnet_address_space
   subnets = {
     "AzureBastionSubnet" = 27
@@ -20,15 +21,15 @@ module "hub_subnet_calculator" {
   }
 }
 
-output "calculated_subnet_names" {
+output "hub_calculated_subnet_names" {
   value = module.hub_subnet_calculator.subnet_names
 }
 
-output "calculated_subnet_ranges" {
+output "hub_calculated_subnet_ranges" {
   value = module.hub_subnet_calculator.subnet_ranges
 }
 
-output "calculated_subnets" {
+output "hub_calculated_subnets" {
   value = module.hub_subnet_calculator.subnets
 }
 
@@ -47,7 +48,7 @@ module "hub_network" {
     (module.hub_subnet_calculator.subnet_names[0]) = {
       address_prefixes = toset([module.hub_subnet_calculator.subnet_ranges[0]])
     }
-    (module.hub_network.subnet_names[1]) = {
+    (module.hub_subnet_calculator.subnet_names[1]) = {
       address_prefixes = toset([module.hub_subnet_calculator.subnet_ranges[1]])
     }
   }
@@ -55,14 +56,23 @@ module "hub_network" {
 
 # Example with a list of sizes (automatic naming)
 module "spoke_subnet_calculator" {
-  source    = "cyber-scot/subnet-calculator/null"
-  base_cidr = local.spoke_vnet_address_space
-  subnets   = [28, 26, 25] # Automatic naming as subnet_1, subnet_2, subnet_3
+  source = "cyber-scot/subnet-calculator/null"
+
+  base_cidr    = local.spoke_vnet_address_space
+  subnet_sizes = [28, 26, 25] # Automatic naming as subnet1, subnet2, subnet3
 }
 
+output "spoke_calculated_subnet_names" {
+  value = module.spoke_subnet_calculator.subnet_names
+}
 
+output "spoke_calculated_subnet_ranges" {
+  value = module.spoke_subnet_calculator.subnet_ranges
+}
 
-# Outputs can be accessed as before
+output "spoke_calculated_subnets" {
+  value = module.spoke_subnet_calculator.subnets
+}
 
 
 module "spoke_network" {

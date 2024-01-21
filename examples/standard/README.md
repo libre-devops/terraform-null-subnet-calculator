@@ -1,4 +1,9 @@
 ```hcl
+locals {
+  hub_vnet_address_space   = "10.0.0.0/12"
+  spoke_vnet_address_space = "192.168.0.0/23"
+}
+
 module "rg" {
   source = "cyber-scot/rg/azurerm"
 
@@ -7,28 +12,71 @@ module "rg" {
   tags     = local.tags
 }
 
-module "subnet_calculator" {
-  source    = "cyber-scot/subnet-calculator/null"
-  base_cidr = "10.4.2.128/25"
+module "hub_subnet_calculator" {
+  source = "cyber-scot/subnet-calculator/null"
+
+  base_cidr = local.hub_vnet_address_space
   subnets = {
     "AzureBastionSubnet" = 27
     "GatewaySubnet"      = 26
   }
 }
 
-output "calculated_subnet_names" {
-  value = module.subnet_calculator.subnet_names
+output "hub_calculated_subnet_names" {
+  value = module.hub_subnet_calculator.subnet_names
 }
 
-output "calculated_subnet_ranges" {
-  value = module.subnet_calculator.subnet_ranges
+output "hub_calculated_subnet_ranges" {
+  value = module.hub_subnet_calculator.subnet_ranges
 }
 
-output "calculated_subnets" {
-  value = module.subnet_calculator.subnets
+output "hub_calculated_subnets" {
+  value = module.hub_subnet_calculator.subnets
 }
 
-module "network" {
+module "hub_network" {
+  source = "cyber-scot/network/azurerm"
+
+  rg_name  = module.rg.rg_name
+  location = module.rg.rg_location
+  tags     = module.rg.rg_tags
+
+  vnet_name          = "vnet-hub-${var.short}-${var.loc}-${var.env}-01"
+  vnet_location      = module.rg.rg_location
+  vnet_address_space = toset([local.hub_vnet_address_space])
+
+  subnets = {
+    (module.hub_subnet_calculator.subnet_names[0]) = {
+      address_prefixes = toset([module.hub_subnet_calculator.subnet_ranges[0]])
+    }
+    (module.hub_subnet_calculator.subnet_names[1]) = {
+      address_prefixes = toset([module.hub_subnet_calculator.subnet_ranges[1]])
+    }
+  }
+}
+
+# Example with a list of sizes (automatic naming)
+module "spoke_subnet_calculator" {
+  source = "cyber-scot/subnet-calculator/null"
+
+  base_cidr    = local.spoke_vnet_address_space
+  subnet_sizes = [28, 26, 25] # Automatic naming as subnet1, subnet2, subnet3
+}
+
+output "spoke_calculated_subnet_names" {
+  value = module.spoke_subnet_calculator.subnet_names
+}
+
+output "spoke_calculated_subnet_ranges" {
+  value = module.spoke_subnet_calculator.subnet_ranges
+}
+
+output "spoke_calculated_subnets" {
+  value = module.spoke_subnet_calculator.subnets
+}
+
+
+module "spoke_network" {
   source = "cyber-scot/network/azurerm"
 
   rg_name  = module.rg.rg_name
@@ -37,14 +85,17 @@ module "network" {
 
   vnet_name          = "vnet-${var.short}-${var.loc}-${var.env}-01"
   vnet_location      = module.rg.rg_location
-  vnet_address_space = ["10.0.0.0/16"]
+  vnet_address_space = toset([local.spoke_vnet_address_space])
 
   subnets = {
-    (module.subnet_calculator.subnet_names[0]) = {
-      address_prefixes = toset([module.subnet_calculator.subnet_ranges[0]])
+    (module.spoke_subnet_calculator.subnet_names[0]) = {
+      address_prefixes = toset([module.spoke_subnet_calculator.subnet_ranges[0]])
     }
-    (module.subnet_calculator.subnet_names[1]) = {
-      address_prefixes = toset([module.subnet_calculator.subnet_ranges[1]])
+    (module.spoke_subnet_calculator.subnet_names[1]) = {
+      address_prefixes = toset([module.spoke_subnet_calculator.subnet_ranges[1]])
+    }
+    (module.spoke_subnet_calculator.subnet_names[2]) = {
+      address_prefixes = toset([module.spoke_subnet_calculator.subnet_ranges[2]])
     }
   }
 }
@@ -65,9 +116,11 @@ No requirements.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_network"></a> [network](#module\_network) | cyber-scot/network/azurerm | n/a |
+| <a name="module_hub_network"></a> [hub\_network](#module\_hub\_network) | cyber-scot/network/azurerm | n/a |
+| <a name="module_hub_subnet_calculator"></a> [hub\_subnet\_calculator](#module\_hub\_subnet\_calculator) | cyber-scot/subnet-calculator/null | n/a |
 | <a name="module_rg"></a> [rg](#module\_rg) | cyber-scot/rg/azurerm | n/a |
-| <a name="module_subnet_calculator"></a> [subnet\_calculator](#module\_subnet\_calculator) | cyber-scot/subnet-calculator/null | n/a |
+| <a name="module_spoke_network"></a> [spoke\_network](#module\_spoke\_network) | cyber-scot/network/azurerm | n/a |
+| <a name="module_spoke_subnet_calculator"></a> [spoke\_subnet\_calculator](#module\_spoke\_subnet\_calculator) | cyber-scot/subnet-calculator/null | n/a |
 
 ## Resources
 
@@ -92,6 +145,9 @@ No requirements.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_calculated_subnet_names"></a> [calculated\_subnet\_names](#output\_calculated\_subnet\_names) | n/a |
-| <a name="output_calculated_subnet_ranges"></a> [calculated\_subnet\_ranges](#output\_calculated\_subnet\_ranges) | n/a |
-| <a name="output_calculated_subnets"></a> [calculated\_subnets](#output\_calculated\_subnets) | n/a |
+| <a name="output_hub_calculated_subnet_names"></a> [hub\_calculated\_subnet\_names](#output\_hub\_calculated\_subnet\_names) | n/a |
+| <a name="output_hub_calculated_subnet_ranges"></a> [hub\_calculated\_subnet\_ranges](#output\_hub\_calculated\_subnet\_ranges) | n/a |
+| <a name="output_hub_calculated_subnets"></a> [hub\_calculated\_subnets](#output\_hub\_calculated\_subnets) | n/a |
+| <a name="output_spoke_calculated_subnet_names"></a> [spoke\_calculated\_subnet\_names](#output\_spoke\_calculated\_subnet\_names) | n/a |
+| <a name="output_spoke_calculated_subnet_ranges"></a> [spoke\_calculated\_subnet\_ranges](#output\_spoke\_calculated\_subnet\_ranges) | n/a |
+| <a name="output_spoke_calculated_subnets"></a> [spoke\_calculated\_subnets](#output\_spoke\_calculated\_subnets) | n/a |
