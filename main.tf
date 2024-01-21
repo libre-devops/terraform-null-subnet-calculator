@@ -4,7 +4,7 @@ locals {
   # Check if custom names are provided
   use_custom_names = length(var.subnets) > 0
 
-  # Use subnets_with_names if provided, else generate names for subnet_sizes
+  # Use subnets if provided, else generate names for subnet_sizes
   subnets_map = local.use_custom_names ? var.subnets : {
     for i, size in var.subnet_sizes : format("subnet%s", i + 1) => size
   }
