@@ -8,7 +8,7 @@ locals {
   final_subnet_details = local.use_custom_details ? var.subnets : {
     for i, size in var.subnet_sizes : format("subnet%s", i + 1) => {
       mask_size = size
-      netnum    = i  # Default netnum, can be changed to another logic
+      netnum    = i # Default netnum, can be changed to another logic
     }
   }
 
