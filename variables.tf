@@ -3,14 +3,17 @@ variable "base_cidr" {
   type        = string
 }
 
-variable "subnet_sizes" {
-  description = "List of desired subnet mask sizes"
-  type        = list(number)
-  default     = []
+variable "subnets" {
+  description = "Map of subnet names to their desired mask sizes and netnum"
+  type = map(object({
+    mask_size = number
+    netnum    = number
+  }))
+  default = {}
 }
 
-variable "subnets" {
-  description = "Map of custom subnet names to mask sizes"
-  type        = map(number)
-  default     = {}
+variable "subnet_sizes" {
+  description = "List of subnet sizes if names are to be generated"
+  type        = list(number)
+  default     = []
 }
