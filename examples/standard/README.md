@@ -14,7 +14,7 @@ module "rg" {
 }
 
 module "hub_subnet_calculator" {
-  source = "cyber-scot/subnet-calculator/null"
+  source = "github.com/cyber-scot/terraform-null-subnet-calculator"
 
   base_cidr = local.hub_vnet_address_space
   subnets = {
@@ -56,7 +56,7 @@ module "hub_network" {
 
 # Example with a list of sizes (automatic naming)
 module "spoke_subnet_calculator" {
-  source = "cyber-scot/subnet-calculator/null"
+  source = "github.com/cyber-scot/terraform-null-subnet-calculator"
 
   base_cidr    = local.spoke_vnet_address_space
   subnet_sizes = [28, 26, 25] # Automatic naming as subnet1, subnet2, subnet3
@@ -93,7 +93,7 @@ module "spoke_network" {
 
 # Example with a list of sizes (automatic naming)
 module "spoke2_subnet_calculator" {
-  source = "cyber-scot/subnet-calculator/null"
+  source = "github.com/cyber-scot/terraform-null-subnet-calculator"
 
   base_cidr    = local.spoke2_vnet_address_space
   subnet_sizes = [28, 26, 26] # Automatic naming as subnet1, subnet2, subnet3
@@ -134,12 +134,12 @@ No requirements.
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_hub_network"></a> [hub\_network](#module\_hub\_network) | cyber-scot/network/azurerm | n/a |
-| <a name="module_hub_subnet_calculator"></a> [hub\_subnet\_calculator](#module\_hub\_subnet\_calculator) | cyber-scot/subnet-calculator/null | n/a |
+| <a name="module_hub_subnet_calculator"></a> [hub\_subnet\_calculator](#module\_hub\_subnet\_calculator) | github.com/cyber-scot/terraform-null-subnet-calculator | n/a |
 | <a name="module_rg"></a> [rg](#module\_rg) | cyber-scot/rg/azurerm | n/a |
 | <a name="module_spoke2_network"></a> [spoke2\_network](#module\_spoke2\_network) | cyber-scot/network/azurerm | n/a |
-| <a name="module_spoke2_subnet_calculator"></a> [spoke2\_subnet\_calculator](#module\_spoke2\_subnet\_calculator) | cyber-scot/subnet-calculator/null | n/a |
+| <a name="module_spoke2_subnet_calculator"></a> [spoke2\_subnet\_calculator](#module\_spoke2\_subnet\_calculator) | github.com/cyber-scot/terraform-null-subnet-calculator | n/a |
 | <a name="module_spoke_network"></a> [spoke\_network](#module\_spoke\_network) | cyber-scot/network/azurerm | n/a |
-| <a name="module_spoke_subnet_calculator"></a> [spoke\_subnet\_calculator](#module\_spoke\_subnet\_calculator) | cyber-scot/subnet-calculator/null | n/a |
+| <a name="module_spoke_subnet_calculator"></a> [spoke\_subnet\_calculator](#module\_spoke\_subnet\_calculator) | github.com/cyber-scot/terraform-null-subnet-calculator | n/a |
 
 ## Resources
 

@@ -13,7 +13,7 @@ module "rg" {
 }
 
 module "hub_subnet_calculator" {
-  source = "cyber-scot/subnet-calculator/null"
+  source = "github.com/cyber-scot/terraform-null-subnet-calculator"
 
   base_cidr = local.hub_vnet_address_space
   subnets = {
@@ -55,7 +55,7 @@ module "hub_network" {
 
 # Example with a list of sizes (automatic naming)
 module "spoke_subnet_calculator" {
-  source = "cyber-scot/subnet-calculator/null"
+  source = "github.com/cyber-scot/terraform-null-subnet-calculator"
 
   base_cidr    = local.spoke_vnet_address_space
   subnet_sizes = [28, 26, 25] # Automatic naming as subnet1, subnet2, subnet3
@@ -92,7 +92,7 @@ module "spoke_network" {
 
 # Example with a list of sizes (automatic naming)
 module "spoke2_subnet_calculator" {
-  source = "cyber-scot/subnet-calculator/null"
+  source = "github.com/cyber-scot/terraform-null-subnet-calculator"
 
   base_cidr    = local.spoke2_vnet_address_space
   subnet_sizes = [28, 26, 26] # Automatic naming as subnet1, subnet2, subnet3
