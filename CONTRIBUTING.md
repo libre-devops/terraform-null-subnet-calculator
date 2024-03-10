@@ -1,4 +1,4 @@
-# Contributing to CyberScot Repositories
+# Contributing to Libre Devops Repositories
 
 Your contributions mean a lot to us, and we are excited to include the community at every opportunity.
 
@@ -23,29 +23,29 @@ The most effective way to suggest changes to our codebase is through pull reques
 While the following workflow is tailored for Terraform submissions, it generally applies to other codes as well:
 
 1. Fork the repository and branch out from `main`.
-2. Ensure you've verified your code with `terraform validate`, `tfsec`, `checkov`, or other linting/security tools.
-3. Use `terraform fmt -recursive` or another formatter like [prettier](https://prettier.io/) to format your Terraform code.
+2. Ensure you've verified your code with `terraform validate`, `tfsec`, `checkov`, or other linting/security tools. 3. We have a script to help manage our common workflow - `Run-AzTerraform.ps1`
+3. Use `terraform fmt -recursive` or another formatter like [prettier](https://prettier.io/) to format your Terraform code. We have a script for this as well - `Terraform-Release.ps1`
 4. Files and variables should adhere to the "What You See Is What You Get" (WYSIWYG) naming guideline. For instance, in a terraform repo:
 ```shell
 terraform-${provider}-${purpose}/ # For example, the provider can be 'azurerm' and the purpose can be 'virtual-network'
 |
-├── ${purpose}.tf # The primary function of the Terraform code, e.g., for a virtual network, it would be named 'vnet.tf'
-├── input.tf      # For input variables
+├── ${purpose}/main.tf # The primary function of the Terraform code, e.g., for a virtual network, it would be named 'vnet.tf'
+├── variables.tf      # For input variables
 ├── LICENSE       # Exclusively the MIT License
 ├── locals.tf     # If locals are required
-├── output.tf     # For output variables
+├── outputs.tf     # For output variables
 ├── README.md     # Documentation
 ```
-5. Every `README.md` must be informative. For Terraform, always include a code example that successfully executes the module, and a markdown-formatted output from [terraform-docs](https://github.com/terraform-docs/terraform-docs):
+1. Every `README.md` must be informative. For Terraform, always include a code example that successfully executes the module, and a markdown-formatted output from [terraform-docs](https://github.com/terraform-docs/terraform-docs):
 ```shell
 terraform-docs markdown . >> README.md
 ```
 
-6. Organize all variables alphabetically. In Terraform, this can be achieved with the following utility script:
-```shell
-curl https://raw.githubusercontent.com/cyberscot/utils/main/scripts/terraform/tf-sort.sh | bash
-```
-7. Now, you're ready to submit your pull request!
+Our `Terraform-Release.ps1` script will help with this.
+
+1. Organize all variables alphabetically. In Terraform, this can be achieved with the following utility script:
+Our `Terraform-Release.ps1` script will help with this.
+2. Now, you're ready to submit your pull request!
 
 ## All Contributions are Subject to the MIT License
 
