@@ -3,6 +3,11 @@ output "base_cidr" {
   value       = var.base_cidr
 }
 
+output "base_cidr_set" {
+  description = "The base CIDR given to the module for calculation as a set"
+  value       = toset([var.base_cidr])
+}
+
 output "subnet_first_ip" {
   description = "A map of subnet names to their first usable IP addresses."
   value = { for name, cidr in local.calculated_subnets :

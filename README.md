@@ -50,6 +50,7 @@ No resources.
 | Name | Description |
 |------|-------------|
 | <a name="output_base_cidr"></a> [base\_cidr](#output\_base\_cidr) | The base CIDR given to the module for calculation |
+| <a name="output_base_cidr_set"></a> [base\_cidr\_set](#output\_base\_cidr\_set) | The base CIDR given to the module for calculation as a set |
 | <a name="output_subnet_first_ip"></a> [subnet\_first\_ip](#output\_subnet\_first\_ip) | A map of subnet names to their first usable IP addresses. |
 | <a name="output_subnet_first_last_ip"></a> [subnet\_first\_last\_ip](#output\_subnet\_first\_last\_ip) | A map of subnet names to their last usable IP addresses. |
 | <a name="output_subnet_last_ip"></a> [subnet\_last\_ip](#output\_subnet\_last\_ip) | A map of subnet names to their first and last usable IP addresses. |
